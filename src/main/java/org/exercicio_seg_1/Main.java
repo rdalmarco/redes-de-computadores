@@ -5,7 +5,9 @@ import org.exercicio_seg_1.model.userModel;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+
+    public static sha256 sha256 = new sha256();
+    public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Digite o seu usuário: ");
@@ -15,8 +17,8 @@ public class Main {
         String senha = scanner.next();
 
         userModel user = new userModel(usuario,senha);
-        System.out.println(user);
 
+        sha256.encrypt(user);
 
     }
 }

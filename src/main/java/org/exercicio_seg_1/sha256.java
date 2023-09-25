@@ -11,13 +11,19 @@ public class sha256 {
 
     usersRepository usersRepository;
 
-    public void encrypt(userModel user) throws Exception {
+    public String encrypt(userModel user) throws Exception {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hashBytes = digest.digest(user.getUsuario().getBytes(StandardCharsets.UTF_8));
 
-        byte[] inputBytes = user.getUsuario().getBytes(StandardCharsets.UTF_8);
+        StringBuilder hexString = new StringBuilder();
+        for (byte hashByte : hashBytes) {
+            String hex = Integer.toHexString(0xff & hashByte);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
 
-        byte[] hash = digest.digest(inputBytes);
-
-        usersRepository.saveHashToFile(hash);
+        return hexString.toString();
     }
 }

@@ -1,3 +1,4 @@
-[B@622fdb81
-javax.crypto.spec.SecretKeySpec@174fe
+
+IV: xXUo3OXEnHgQnRMTUAim+w==
+KEY: n3Qf212IRb20ipQ5ToT4ow==
 --------------------------------------------------

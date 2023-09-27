@@ -52,13 +52,13 @@ public class usersRepository {
                 if (line.startsWith("Usuario: ")) {
                     usernameCriptografado = line.substring(9);
                 } else if
-                (line.startsWith("Senha: ")) { // Verificar a linha da senha criptografada
-                    senhaCriptografada = hexStringToByteArray(line.substring(5));
+                (line.startsWith("Senha: ")) {
+                    senhaCriptografada = hexStringToByteArray(line.substring(7));
                 }
 
             }
             System.out.println("Usuario: " + usernameCriptografado);
-            System.out.println("Senha: " + senhaCriptografada);
+            System.out.println("Senha: " + byteArrayToHexString(senhaCriptografada));
             readerUser.close();
 
             String userAutenticar = sha256.encrypt(username);
@@ -78,8 +78,8 @@ public class usersRepository {
 
                 readerIvAndKey.close();
 
-                System.out.println("IV: " + iv);
-                System.out.println("KEY: " + chaveSecreta);
+                System.out.println("IV: " + byteArrayToHexString(iv));
+                System.out.println("KEY: " + byteArrayToHexString(chaveSecreta));
 
 
                 System.out.println(aesCbc.decrypter(senhaCriptografada, chaveSecreta, iv));

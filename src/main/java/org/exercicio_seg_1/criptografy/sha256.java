@@ -1,15 +1,10 @@
 package org.exercicio_seg_1.criptografy;
 
-import org.exercicio_seg_1.dao.usersRepository;
-import org.exercicio_seg_1.model.userModel;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class sha256 {
 
-    usersRepository usersRepository;
 
     public static String encrypt(String username) throws Exception {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");

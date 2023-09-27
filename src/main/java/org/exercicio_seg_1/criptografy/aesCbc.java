@@ -7,6 +7,8 @@ import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.util.Base64;
@@ -18,8 +20,15 @@ public class aesCbc {
 
     public static aesEbc aesEbc = new aesEbc();
 
+    private static Cipher cipher;
+
     static {
         Security.addProvider(new BouncyCastleProvider());
+        try {
+            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public byte[] geraIV() {
@@ -31,14 +40,13 @@ public class aesCbc {
     }
 
     public byte[] encrypter(String senha) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
         SecretKeySpec chaveSecreta = keyderiver.derivarChaveComPBKDF2(senha);
 
         byte[] iv = geraIV();
         cipher.init(Cipher.ENCRYPT_MODE, chaveSecreta, new IvParameterSpec(iv));
         byte[] senhaCriptografadaBytes = cipher.doFinal(senha.getBytes());
 
-        saveIvAndChaveToFile(iv, senhaCriptografadaBytes);
+        saveIvAndChaveToFile(iv, chaveSecreta.getEncoded());
         return senhaCriptografadaBytes;
     }
 
@@ -47,7 +55,6 @@ public class aesCbc {
         try {
             SecretKeySpec chaveSecretaDescrypt = new SecretKeySpec(chaveSecretaBytes, "AES");
 
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
             cipher.init(Cipher.DECRYPT_MODE, chaveSecretaDescrypt, new IvParameterSpec(ivBytes));
 
             byte[] passwordBytes = cipher.doFinal(senhaCriptografada);

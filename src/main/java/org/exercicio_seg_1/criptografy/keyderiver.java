@@ -9,14 +9,12 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 
 public class keyderiver {
 
     public static SecretKeySpec derivarChaveComPBKDF2(String senha) throws Exception {
         try {
-            byte[] salt = new byte[]{(byte) 0x12, (byte) 0x34, (byte) 0x56, (byte) 0x78, (byte) 0x90, (byte) 0xAB, (byte) 0xCD, (byte) 0xEF};
-            //byte[] salt = generateSalt();
+            byte[] salt = generateSalt();
             SecretKeyFactory pbkdf2 = null;
             PBEKeySpec spec  = new PBEKeySpec(senha.toCharArray(), salt, 1000, 128);
             pbkdf2 = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");

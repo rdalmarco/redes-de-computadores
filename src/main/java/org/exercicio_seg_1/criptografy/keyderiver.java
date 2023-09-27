@@ -14,7 +14,7 @@ public class keyderiver {
 
     public static SecretKeySpec derivarChaveComPBKDF2(String senha) throws Exception {
         try {
-            byte[] salt = generateSalt();
+            byte[] salt = geraSalt();
             SecretKeyFactory pbkdf2 = null;
             PBEKeySpec spec  = new PBEKeySpec(senha.toCharArray(), salt, 1000, 128);
             pbkdf2 = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
@@ -26,8 +26,7 @@ public class keyderiver {
         }
     }
 
-    //Gerar salt randômico
-    public static byte[] generateSalt() {
+    public static byte[] geraSalt() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);

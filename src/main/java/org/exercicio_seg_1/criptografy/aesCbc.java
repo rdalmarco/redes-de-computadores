@@ -32,10 +32,10 @@ public class aesCbc {
     }
 
     public byte[] geraIV() {
-        //byte[] iv = new byte[16];
-        //SecureRandom secureRandom = new SecureRandom();
-        //secureRandom.nextBytes(iv);
-        byte[] iv = Hex.decode("9f741fdb5d8845bdb48a94394e84f8a3");
+        byte[] iv = new byte[16];
+        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.nextBytes(iv);
+        //byte[] iv = Hex.decode("9f741fdb5d8845bdb48a94394e84f8a3");
         return iv;
     }
 

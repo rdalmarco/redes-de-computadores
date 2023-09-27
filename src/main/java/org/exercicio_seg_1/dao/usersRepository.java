@@ -38,7 +38,7 @@ public class usersRepository {
         }
     }
 
-    public static void verificaCredenciais(String username, String password) {
+    public static boolean verificaCredenciais(String username, String password) {
         try {
             byte[] iv = null;
             byte[] chaveSecreta = null;
@@ -57,13 +57,13 @@ public class usersRepository {
                 }
 
             }
-            System.out.println("Usuario: " + usernameCriptografado);
-            System.out.println("Senha: " + byteArrayToHexString(senhaCriptografada));
+            //System.out.println("Usuario: " + usernameCriptografado);
+            //System.out.println("Senha: " + byteArrayToHexString(senhaCriptografada));
             readerUser.close();
 
             String userAutenticar = sha256.encrypt(username);
             if (userAutenticar.equals(usernameCriptografado)) {
-                System.out.println("Usuario encontrado");
+                //System.out.println("Usuario encontrado");
 
                 BufferedReader readerIvAndKey = new BufferedReader(new FileReader("chaveAndIv.txt"));
                 line = null;
@@ -78,13 +78,19 @@ public class usersRepository {
 
                 readerIvAndKey.close();
 
-                System.out.println("IV: " + byteArrayToHexString(iv));
-                System.out.println("KEY: " + byteArrayToHexString(chaveSecreta));
+                //System.out.println("IV: " + byteArrayToHexString(iv));
+                //System.out.println("KEY: " + byteArrayToHexString(chaveSecreta));
 
-
-                System.out.println(aesCbc.decrypter(senhaCriptografada, chaveSecreta, iv));
+                if (aesCbc.decrypter(senhaCriptografada, chaveSecreta, iv).equals(password)) {
+                    System.out.println("Usuario logado");
+                    return true;
+                } else {
+                    System.out.println("Senha incorreta");
+                    return false;
+                }
             } else {
                 System.out.println("Usuario nao encontrado");
+                return false;
             }
 
         } catch (FileNotFoundException e) {
@@ -106,11 +112,11 @@ public class usersRepository {
 
     public static byte[] hexStringToByteArray(String hexString) {
         int len = hexString.length();
-        byte[] data = new byte[len / 2];
+        byte[] valor = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
+            valor[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
                     + Character.digit(hexString.charAt(i + 1), 16));
         }
-        return data;
+        return valor;
     }
 }

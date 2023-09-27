@@ -50,9 +50,9 @@ public class aesCbc {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
             cipher.init(Cipher.DECRYPT_MODE, chaveSecretaDescrypt, new IvParameterSpec(ivBytes));
 
-            byte[] decryptedPasswordBytes = cipher.doFinal(senhaCriptografada);
+            byte[] passwordBytes = cipher.doFinal(senhaCriptografada);
 
-            return new String(decryptedPasswordBytes, StandardCharsets.UTF_8);
+            return new String(passwordBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new Exception("Erro ao descriptografar a senha", e);
         }

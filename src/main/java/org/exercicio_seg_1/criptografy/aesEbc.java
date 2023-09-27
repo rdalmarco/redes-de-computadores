@@ -1,4 +1,4 @@
-package org.exercicio_seg_1;
+package org.exercicio_seg_1.criptografy;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;

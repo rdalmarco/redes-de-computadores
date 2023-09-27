@@ -1,4 +1,4 @@
-package org.exercicio_seg_1;
+package org.exercicio_seg_1.criptografy;
 
 import org.exercicio_seg_1.dao.usersRepository;
 import org.exercicio_seg_1.model.userModel;
@@ -11,9 +11,9 @@ public class sha256 {
 
     usersRepository usersRepository;
 
-    public String encrypt(userModel user) throws Exception {
+    public static String encrypt(String username) throws Exception {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] hashBytes = digest.digest(user.getUsuario().getBytes(StandardCharsets.UTF_8));
+        byte[] hashBytes = digest.digest(username.getBytes(StandardCharsets.UTF_8));
 
         StringBuilder hexString = new StringBuilder();
         for (byte hashByte : hashBytes) {

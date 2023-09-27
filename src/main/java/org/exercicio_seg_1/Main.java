@@ -1,5 +1,7 @@
 package org.exercicio_seg_1;
 
+import org.exercicio_seg_1.criptografy.aesCbc;
+import org.exercicio_seg_1.criptografy.sha256;
 import org.exercicio_seg_1.dao.usersRepository;
 import org.exercicio_seg_1.model.userModel;
 
@@ -9,8 +11,8 @@ public class Main {
 
     public usersRepository userRepository;
 
-    public static sha256 sha256 = new sha256();
-    public static aesCbc aesCbc = new aesCbc();
+    public static org.exercicio_seg_1.criptografy.sha256 sha256 = new sha256();
+    public static org.exercicio_seg_1.criptografy.aesCbc aesCbc = new aesCbc();
 
     public static void main(String[] args) throws Exception {
 
@@ -25,11 +27,9 @@ public class Main {
 
         userModel user = new userModel(usuario,senha);
 
-        String usernameCriptografado = sha256.encrypt(user);
+        String usernameCriptografado = sha256.encrypt(user.getUsuario());
 
-        String passwordCriptografada = aesCbc.encrypter(senha);
-
-        usersRepository.saveUsernameAndPasswordToFile(usernameCriptografado, passwordCriptografada);
+        usersRepository.saveUsernameAndPasswordToFile(usernameCriptografado, aesCbc.encrypter(senha));
         usersRepository.verificaCredenciais(usuario, senha);
     }
 }

@@ -68,17 +68,15 @@ public class usersRepository {
 
                 readerIvAndKey.close();
 
-                File readerIvAndKey_temp = new File("KeyAndIv_" + usernameCriptografado + "_temp.txt");
-                readerIvAndKey_temp.delete();
-
                 if (aesCbc.decrypter(senhaCriptografada, chaveSecreta, iv).equals(password)) {
                     System.out.println("Usuario logado");
+                    File readerIvAndKey_temp = new File("KeyAndIv_" + usernameCriptografado + "_temp.txt");
+                    readerIvAndKey_temp.delete();
                     return true;
                 } else {
                     System.out.println("Senha incorreta");
                     return false;
                 }
-
             } else {
                 return false;
             }

@@ -4,14 +4,13 @@ package org.exercicio_seg_1.dao;
 import org.exercicio_seg_1.criptografy.aesCbc;
 import org.exercicio_seg_1.criptografy.aesEcb;
 import org.exercicio_seg_1.criptografy.sha256;
-import org.exercicio_seg_1.model.ivAndKey;
 
 import java.io.*;
 
 public class usersRepository {
 
 
-    public static void saveUsernameAndPasswordToFile(String usernameCriptografado, byte[] senha) throws Exception {
+    public static void saveUsernameAndPasswordToFile(String usernameCriptografado, byte[] senha)  {
         try (BufferedWriter save = new BufferedWriter(new FileWriter("UserAndPass_" + usernameCriptografado + ".txt", true))) {
             save.write("Usuario: " + usernameCriptografado);
             save.newLine();

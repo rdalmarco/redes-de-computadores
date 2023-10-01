@@ -1,8 +1,6 @@
 package org.exercicio_seg_1.criptografy;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.exercicio_seg_1.dao.usersRepository;
-import org.exercicio_seg_1.model.ivAndKey;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;

@@ -40,7 +40,7 @@ public class Main {
 
             String usernameCriptografado = sha256.encrypt(user.getUsuario());
 
-            usersRepository.saveUsernameAndPasswordToFile(usernameCriptografado, aesCbc.encrypter(senha));
+            usersRepository.saveUsernameAndPasswordToFile(usernameCriptografado, aesCbc.encrypter(senha, usernameCriptografado));
         } else
             if (option == 2) {
                 System.out.print("Digite o seu usuário: ");

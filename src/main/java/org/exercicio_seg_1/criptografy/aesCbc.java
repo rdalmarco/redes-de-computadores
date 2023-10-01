@@ -1,24 +1,20 @@
 package org.exercicio_seg_1.criptografy;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.util.encoders.Hex;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.Security;
-import java.util.Base64;
 
 import static org.exercicio_seg_1.dao.usersRepository.*;
 
 
 public class aesCbc {
 
-    public static aesEbc aesEbc = new aesEbc();
+    public static aesEcb aesEbc = new aesEcb();
 
     private static Cipher cipher;
 
@@ -35,18 +31,22 @@ public class aesCbc {
         byte[] iv = new byte[16];
         SecureRandom secureRandom = new SecureRandom();
         secureRandom.nextBytes(iv);
-        //byte[] iv = Hex.decode("9f741fdb5d8845bdb48a94394e84f8a3");
         return iv;
     }
 
-    public byte[] encrypter(String senha) throws Exception {
+    public byte[] encrypter(String senha, String usernameCriptografado) throws Exception {
         SecretKeySpec chaveSecreta = keyderiver.derivarChaveComPBKDF2(senha);
 
         byte[] iv = geraIV();
         cipher.init(Cipher.ENCRYPT_MODE, chaveSecreta, new IvParameterSpec(iv));
         byte[] senhaCriptografadaBytes = cipher.doFinal(senha.getBytes());
 
-        saveIvAndChaveToFile(iv, chaveSecreta.getEncoded());
+        saveIvAndChaveToFile(iv, chaveSecreta.getEncoded(), usernameCriptografado);
+        System.out.println("Dados cifrados com sucesso utilizando CBC");
+
+        //Chamada para encriptar com ECB arquivo já criado depois da criptografia CBC
+        aesEbc.encrypt(usernameCriptografado);
+
         return senhaCriptografadaBytes;
     }
 
@@ -59,6 +59,7 @@ public class aesCbc {
 
             byte[] passwordBytes = cipher.doFinal(senhaCriptografada);
 
+            System.out.println("Senha decifrada com sucesso utilizando CBC");
             return new String(passwordBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new Exception("Erro ao descriptografar a senha", e);

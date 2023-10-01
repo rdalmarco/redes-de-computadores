@@ -1,6 +1,5 @@
 package org.exercicio_seg_1.criptografy;
 
-import org.bouncycastle.util.encoders.Hex;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;

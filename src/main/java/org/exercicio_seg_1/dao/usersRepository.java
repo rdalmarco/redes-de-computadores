@@ -2,39 +2,33 @@ package org.exercicio_seg_1.dao;
 
 
 import org.exercicio_seg_1.criptografy.aesCbc;
+import org.exercicio_seg_1.criptografy.aesEcb;
 import org.exercicio_seg_1.criptografy.sha256;
+import org.exercicio_seg_1.model.ivAndKey;
 
 import java.io.*;
 
 public class usersRepository {
 
-    static String outputUserAndPassword = "UserAndPassword.txt";
 
-    static String outputChaveAndIv = "ChaveAndIv.txt";
-    static String delimiter = "--------------------------------------------------";
-
-    public static void saveUsernameAndPasswordToFile(String username, byte[] senha) throws Exception {
-        try (BufferedWriter save = new BufferedWriter(new FileWriter(outputUserAndPassword, true))) {
-            save.newLine();
-            save.write("Usuario: " + username);
+    public static void saveUsernameAndPasswordToFile(String usernameCriptografado, byte[] senha) throws Exception {
+        try (BufferedWriter save = new BufferedWriter(new FileWriter("UserAndPass_" + usernameCriptografado + ".txt", true))) {
+            save.write("Usuario: " + usernameCriptografado);
             save.newLine();
             save.write("Senha: " + byteArrayToHexString(senha));
             save.newLine();
-            save.write(delimiter);
+            System.out.println("Usuário cadastrado");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void saveIvAndChaveToFile(byte[] iv, byte[] chaveSecreta) throws IOException {
-        try (BufferedWriter save = new BufferedWriter(new FileWriter(outputChaveAndIv, true))) {
-
-            save.newLine();
+    public static void saveIvAndChaveToFile(byte[] iv, byte[] chaveSecreta, String usernameCriptografado) throws IOException {
+        try (BufferedWriter save = new BufferedWriter(new FileWriter("KeyAndIv_" + usernameCriptografado + ".txt", true))) {
             save.write("IV: " + byteArrayToHexString(iv));
             save.newLine();
             save.write("KEY: " + byteArrayToHexString(chaveSecreta));
             save.newLine();
-            save.write(delimiter);
         }
     }
 
@@ -45,27 +39,23 @@ public class usersRepository {
             String usernameCriptografado = null;
             byte[] senhaCriptografada = null;
 
-            BufferedReader readerUser = new BufferedReader(new FileReader("UserAndPassword.txt"));
+            usernameCriptografado = sha256.encrypt(username);
+
+            BufferedReader readerUser = new BufferedReader(new FileReader("UserAndPass_" + usernameCriptografado + ".txt"));
             String line;
 
-            while ((line = readerUser.readLine()) != null) {
-                if (line.startsWith("Usuario: ")) {
-                    usernameCriptografado = line.substring(9);
-                } else if
-                (line.startsWith("Senha: ")) {
-                    senhaCriptografada = hexStringToByteArray(line.substring(7));
+            if (readerUser != null) {
+
+                while ((line = readerUser.readLine()) != null) {
+                    if (line.startsWith("Senha: ")) {
+                        senhaCriptografada = hexStringToByteArray(line.substring(7));
+                    }
                 }
+                readerUser.close();
 
-            }
-            //System.out.println("Usuario: " + usernameCriptografado);
-            //System.out.println("Senha: " + byteArrayToHexString(senhaCriptografada));
-            readerUser.close();
+                aesEcb.decrypt(usernameCriptografado);
 
-            String userAutenticar = sha256.encrypt(username);
-            if (userAutenticar.equals(usernameCriptografado)) {
-                //System.out.println("Usuario encontrado");
-
-                BufferedReader readerIvAndKey = new BufferedReader(new FileReader("chaveAndIv.txt"));
+                BufferedReader readerIvAndKey = new BufferedReader(new FileReader("KeyAndIv_" + usernameCriptografado + "_temp.txt"));
                 line = null;
 
                 while ((line = readerIvAndKey.readLine()) != null) {
@@ -78,29 +68,29 @@ public class usersRepository {
 
                 readerIvAndKey.close();
 
-                //System.out.println("IV: " + byteArrayToHexString(iv));
-                //System.out.println("KEY: " + byteArrayToHexString(chaveSecreta));
-
                 if (aesCbc.decrypter(senhaCriptografada, chaveSecreta, iv).equals(password)) {
                     System.out.println("Usuario logado");
+                    File readerIvAndKey_temp = new File("KeyAndIv_" + usernameCriptografado + "_temp.txt");
+                    readerIvAndKey_temp.delete();
                     return true;
                 } else {
                     System.out.println("Senha incorreta");
                     return false;
                 }
             } else {
-                System.out.println("Usuario nao encontrado");
                 return false;
             }
 
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            System.out.println("Usuário não encontrado");
+            return false;
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
 
     public static String byteArrayToHexString(byte[] bytes) {
         StringBuilder hexString = new StringBuilder();
